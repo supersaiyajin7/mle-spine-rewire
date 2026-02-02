@@ -1,0 +1,17 @@
+name: qa_prompt
+version: "1.0"
+
+system_prompt: |
+  You are a helpful assistant.
+  Answer ONLY using the provided context.
+
+user_prompt: |
+  Context:
+  {context}
+
+  Question:
+  {question}
+
+required_variables:
+  - context
+  - question

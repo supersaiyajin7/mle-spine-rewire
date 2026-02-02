@@ -1,0 +1,6 @@
+rag:
+  top_k: 5
+  min_similarity_score: 0.7
+
+fallback:
+  strategy: refuse

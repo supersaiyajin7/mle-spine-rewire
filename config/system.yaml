@@ -1,0 +1,14 @@
+app:
+  name: genai-rag
+  environment: local
+
+runtime:
+  log_level: INFO
+  max_concurrent_requests: 5
+
+features:
+  enable_rag: true
+  enable_cache: false
+
+bullshit:
+  enable: True
