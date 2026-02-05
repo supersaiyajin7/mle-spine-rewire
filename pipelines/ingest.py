@@ -12,15 +12,20 @@ PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
 REJECTED_DIR.mkdir(parents=True, exist_ok=True)
 
 
+def load_existing_document(path: Path) -> Document:
+    return Document.model_validate_json(path.read_text())
+
+
 def ingest_document(source: str, content: str, metadata: dict):
     document_id = compute_document_id(source, content)
 
     processed_path = PROCESSED_DIR / f"{document_id}.json"
     raw_path = RAW_DIR / f"{document_id}.json"
-
+    
     # Idempotency check FIRST
     if processed_path.exists():
-        return Document.parse_file(processed_path)
+        return load_existing_document(processed_path)
+
 
     try:
         doc = Document(

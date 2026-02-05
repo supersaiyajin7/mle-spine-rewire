@@ -1,7 +1,7 @@
 from pipelines.ingest import ingest_document
 
 if __name__ == "__main__":
-    content = "This is a sample document about machine learning."
+    content = "This is a sample document about machine learning - come lets learn !"
     # metadata = {
     #     "author": "test_user",
     #     "category": "ml"
