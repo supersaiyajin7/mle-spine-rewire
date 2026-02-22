@@ -39,3 +39,24 @@ class RetrievalResult(BaseModel):
     document_id: str
     score: float
     content: str
+
+class GenerationRequest(BaseModel):
+    query: str
+    contexts: List[str]
+    max_tokens: int
+    temperature: float
+
+
+class GenerationResponse(BaseModel):
+    answer: str
+    used_contexts: List[str]
+
+
+class RAGResponse(BaseModel):
+    answer: Optional[str]
+    used_contexts: List[str]
+    refused: bool
+    reason: Optional[str]
+
+
+

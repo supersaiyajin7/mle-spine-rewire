@@ -47,3 +47,47 @@ What changes invalidate retrieval results?
 
 Why is explainability more important than speed here?
 Explainability is more important than speed because retrieval errors cause silent failures that manifest as hallucinations, not crashes.
+
+# 06-Feb-2026
+What information is the LLM allowed to use?
+The LLM is allowed to use only the query text and the retrieved chunk contents explicitly passed into the prompt.
+
+What prevents hallucinations in this design?
+Hallucinations are reduced by enforcing a strict generation boundary: the LLM only receives retrieved context and is instructed to refuse when the answer is not present.
+
+What failures would still be possible?
+Generation can still fail due to retrieval errors, incomplete context, or stale embeddings. In this design, failures are diagnosable because each stage is explicit.
+
+# 23-Feb-2026
+## Day 6 – Full RAG (Ownership Mode)
+
+### Where does the system refuse instead of guessing?
+
+- Refuses after retrieval if no relevant context is found.
+- May refuse during generation if the answer cannot be grounded in provided context.
+- Integrity issues (e.g., embedding version mismatch) should trigger explicit failure, not silent behavior.
+
+---
+
+### Which failures are user-visible vs internal?
+
+**User-visible failures**
+- Explicit refusal ("No relevant context found")
+- System errors (timeouts, dependency failures)
+
+**Internal (silent) failures**
+- Incorrect or weak retrieval
+- Stale or mismatched embeddings
+- Partial or incomplete context
+
+> Silent degradation is more dangerous than visible failure.
+
+---
+
+### What would I monitor in production?
+
+- Retrieval success rate and similarity score distribution  
+- Refusal rate and sudden spikes  
+- Embedding version alignment and freshness  
+- Latency and token usage per request  
+- User feedback / correction signals
