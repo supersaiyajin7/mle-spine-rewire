@@ -3,9 +3,9 @@ import hashlib
 from datetime import datetime
 from app.core.contracts import Embedding
 from pathlib import Path
+from app.config.settings import settings
 
-
-EMBEDDING_DIM = 8  # small on purpose
+EMBEDDING_DIM = settings.embedding.dimension
 EMBEDDING_DIR = Path("storage/embeddings")
 EMBEDDING_DIR.mkdir(parents=True, exist_ok=True)
 

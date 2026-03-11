@@ -91,3 +91,92 @@ Generation can still fail due to retrieval errors, incomplete context, or stale 
 - Embedding version alignment and freshness  
 - Latency and token usage per request  
 - User feedback / correction signals
+
+# Day 7
+
+### What metric would detect silent degradation?
+
+- Drop in average top-k similarity score
+- Increase in low-confidence retrievals
+- Unexpected decrease in refusal rate
+- Increase in user correction / negative feedback rate
+
+> Silent degradation often shows up as weaker retrieval quality before outright failure.
+
+---
+
+### What metric would detect total failure?
+
+- Sudden spike to 100% retrieval failures
+- Refusal rate approaching 100%
+- Zero embeddings loaded / version mismatch errors
+- Latency timeouts or dependency errors
+
+> Total failure is usually visible through hard error rates or extreme refusal spikes.
+
+---
+
+### What log would you grep first?
+
+- Retrieval summary logs (number of chunks retrieved, top score)
+- Embedding version used per request
+- End-to-end latency logs
+- Error logs for embedding load / version mismatch
+
+> Start with retrieval logs — most RAG failures originate there, not in the LLM.
+
+
+To detect silent retrieval degradation before users complain, I would monitor:
+
+- Drift in average and distribution of top-k similarity scores
+- Increase in low-confidence retrievals below a defined threshold
+- Changes in retrieval entropy (less separation between top results)
+- Sudden drops in refusal rate despite weak similarity
+- Early shifts in user correction or dissatisfaction signals
+
+Silent degradation is usually visible first in similarity score distributions before it appears in explicit failure metrics.
+
+I kept generation parameters mostly static initially to maintain deterministic behavior while validating the pipeline. Temperature affects output variability, so keeping it fixed helps debugging and evaluation.
+
+However, parameters like max_tokens are often moved to config later because they influence latency and cost management in production.
+
+### What signals would I log for debugging retrieval quality?
+
+- Query text (or hashed query id for privacy)
+- Top-k retrieved chunk IDs
+- Similarity scores for the retrieved chunks
+- Embedding model/version used
+- Retrieval latency
+- Refusal triggered due to low similarity or no results
+
+> These signals help detect weak retrieval, stale embeddings, and similarity score drift.
+
+---
+
+### What signals would I log for debugging generation failures?
+
+- Query and retrieved contexts used for generation
+- Prompt length / token counts
+- Model name and generation parameters (temperature, max_tokens)
+- Generation latency
+- Whether the response triggered refusal
+- Truncated outputs or token limit hits
+
+> These signals help diagnose prompt issues, context truncation, and model behavior.
+
+---
+
+### Which logs should be sampled vs stored fully?
+
+**Store fully**
+- Errors and exceptions
+- Refusal events
+- Retrieval failures
+- Embedding/version mismatch events
+
+**Sample**
+- Successful requests
+- Full prompt/context payloads
+- Normal generation outputs
+
+> Sampling high-volume success logs keeps costs manageable while preserving full data for failures.

@@ -1,9 +1,11 @@
 from pipelines.rag import rag_pipeline
+from app.config.settings import settings
+
 
 resp = rag_pipeline(
     query="What is machine learning?",
-    model_name="fake-embedder",
-    embedding_version="v2",
+    model_name=settings.embedding.model_name,
+    embedding_version=settings.embedding.version,
 )
 
 print("Refused:", resp.refused)

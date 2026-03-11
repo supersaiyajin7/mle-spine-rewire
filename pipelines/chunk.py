@@ -1,9 +1,10 @@
-CHUNK_SIZE = 5000
-CHUNK_OVERLAP = 50
-
 from app.core.contracts import Chunk
+from app.config.settings import settings
 from datetime import datetime
 import uuid
+
+CHUNK_SIZE = settings.chunking.chunk_size
+CHUNK_OVERLAP = settings.chunking.overlap
 
 
 def chunk_text(document_id: str, text: str, metadata: dict):
