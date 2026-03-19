@@ -180,3 +180,37 @@ However, parameters like max_tokens are often moved to config later because they
 - Normal generation outputs
 
 > Sampling high-volume success logs keeps costs manageable while preserving full data for failures.
+
+# day 13
+### Why is request tracing essential in distributed ML systems?
+
+- Enables end-to-end visibility of a single request across multiple components (API → retrieval → generation)
+- Allows debugging in high-concurrency systems without log noise
+- Supports tracing across async and parallel executions
+- Helps correlate failures, latency spikes, and degradation to specific requests
+
+> Without request tracing, debugging distributed ML systems becomes impractical at scale.
+
+---
+
+### What information should always be attached to a request_id?
+
+- Query (or hashed query for privacy)
+- Embedding model/version used
+- Retrieval metadata (top-k, similarity scores)
+- Generation parameters (temperature, max_tokens)
+- Timestamps / latency per stage
+- User/session identifier (if applicable)
+
+> Focus on attaching signals that explain system behavior, not raw payloads.
+
+---
+
+### How would request tracing help debug silent retrieval degradation?
+
+- Allows grouping of low-quality responses by request_id and analyzing retrieval patterns
+- Helps correlate weak similarity scores with specific queries
+- Enables tracing of degraded outputs back to embedding version or chunking changes
+- Supports identifying systemic drift vs query-specific issues
+
+> Silent degradation becomes visible when traced across requests with shared patterns.

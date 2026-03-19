@@ -9,14 +9,18 @@ from app.config.settings import settings
 
 logger = get_logger("rag")
 
+
 def rag_pipeline(
     query: str,
     model_name: str,
     embedding_version: str,
+    request_id: str,
     top_k: int = 3,
 ) -> RAGResponse:
 
     start = time()
+    
+    logger.info(f"RAG Pipeline - Request ID: {request_id} | Starting Retreival")
 
     if embedding_version != settings.embedding.version:
         logger.error("Embedding version mismatch")
@@ -36,7 +40,7 @@ def rag_pipeline(
     )
 
     logger.info(f"RAG Pipeline - Query: {query}")
-    logger.info(f"RAG Pipeline - Retrieval Results: {len(retrieval_results)} chunks found")
+    logger.info(f"RAG Pipeline - Retrieval Results: {len(retrieval_results)} chunks found for request ID: {request_id}")
 
     # Failure containment: no context
     if not retrieval_results:
